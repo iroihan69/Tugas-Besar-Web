@@ -7,20 +7,6 @@ header("Pragma: no-cache");
 
 include 'config.php';
 
-$logged_in = false;
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->bind_param("s", $_SESSION['email']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows == 1) {
-        $logged_in = true;
-    } else {
-        session_unset();
-        session_destroy();
-    }
-}
-
 // Handle login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = $_POST['email'];
