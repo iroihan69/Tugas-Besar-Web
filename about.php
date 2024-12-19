@@ -1,5 +1,12 @@
 <?php
+session_start(); // Memulai sesi
+require_once 'config.php'; // Koneksi database
+
+// Periksa status login jika diperlukan
+$logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,7 +53,12 @@
                 </ul>
             </nav>
             <div class="icons">
-                <a href="#">👤</a>
+                <?php if ($logged_in): ?>
+                    <a href="profile.php">👤 Profile</a>
+                    <a href="about.php" onclick="confirmLogout()">🚪 Logout</a>
+                <?php else: ?>
+                    <a href="login.php">🔑 Login</a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
@@ -108,6 +120,13 @@
             <p>PT BYD Motor Indonesia. Hak cipta dilindungi undang-undang.</p>
         </div>
     </footer>
+    <script>
+        function confirmLogout() {
+            if (confirm("Yakin ingin logout?")) {
+                window.location.href = "logout.php"; 
+            }
+        }
+    </script>
 
     <script src="script.js"></script>
 </body>

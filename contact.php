@@ -1,5 +1,12 @@
 <?php
+session_start(); // Memulai sesi
+require_once 'config.php'; // Koneksi database
+
+// Periksa status login jika diperlukan
+$logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +52,12 @@
                 </ul>
             </nav>
             <div class="icons">
-                <a href="login.php">👤</a>
+                <?php if ($logged_in): ?>
+                    <a href="profile.php">👤 Profile</a>
+                    <a href="contact.php" onclick="confirmLogout()">🚪 Logout</a>
+                <?php else: ?>
+                    <a href="login.php">🔑 Login</a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
@@ -69,7 +81,7 @@
             <p>Terima kasih.</p>
 
             <!-- Formulir -->
-            <form action="submit_form.php" method="POST" class="form-container">
+            <form action="https://formspree.io/f/mzzbnjbb" method="POST" class="form-container">
 
                 <div class="form-group">
                     <label for="nama">Nama pengguna <span class="required"></span></label>
@@ -196,6 +208,13 @@
         }
 
     </style>
+    <script>
+        function confirmLogout() {
+            if (confirm("Yakin ingin logout?")) {
+                window.location.href = "logout.php"; 
+            }
+        }
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

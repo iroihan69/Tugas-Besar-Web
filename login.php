@@ -7,6 +7,11 @@ $error = $success = "";
 
 // Handle Login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    session_start();
+    session_unset();
+    session_destroy();
+
+    session_start();
     if (isset($_POST['email']) && isset($_POST['password'])) {
         $email = trim($_POST['email']);
         $password = trim($_POST['password']);
@@ -24,10 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                     $_SESSION['email'] = $row['email'];
                     $_SESSION['role'] = $row['role'];
 
-                    // Remember Me Logic
+                    // Remember Me Logic (simpan hanya email di cookie)
                     if (isset($_POST['remember'])) {
-                        setcookie('email', $email, time() + (86400 * 7), "/"); 
-                        setcookie('password', $row['password'], time() + (86400 * 7), "/"); 
+                        setcookie('email', $email, time() + (86400 * 7), "/"); // Simpan selama 7 hari
                     }
 
                     // Redirect
@@ -114,6 +118,13 @@ $conn->close();
         .error { color: red; margin-bottom: 10px; }
         .success { color: green; margin-bottom: 10px; }
     </style>
+    <script>
+        function toggleForm(formId) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById(formId).style.display = 'block';
+        }
+    </script>
 </head>
 <body>
     <div class="container" id="loginForm">
@@ -124,12 +135,29 @@ $conn->close();
         ?>
         <form method="POST" action="">
             <input type="email" name="email" placeholder="Email" value="<?php echo isset($_COOKIE['email']) ? $_COOKIE['email'] : ''; ?>" required>
-            <input type="password" name="password" placeholder="Password" value="<?php echo isset($_COOKIE['password']) ? $_COOKIE['password'] : ''; ?>" required>
+            <input type="password" name="password" placeholder="Password" required>
             <label>
-                <input type="checkbox" name="remember" style="margin-bottom: 20px;"<?php echo isset($_COOKIE['email']) ? 'checked' : ''; ?>> Remember Me
+                <input type="checkbox" name="remember" style="margin-bottom: 20px;" <?php echo isset($_COOKIE['email']) ? 'checked' : ''; ?>> Remember Me
             </label>
             <button type="submit" name="login">Login</button>
         </form>
+        <div class="link">
+            <p>Don't have an account? <a href="#" onclick="toggleForm('registerForm')">Create Account</a></p>
+        </div>
+    </div>
+
+    <!-- Form Register -->
+    <div class="container" id="registerForm" style="display: none;">
+        <h2>Create Account</h2>
+        <form method="POST" action="">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <button type="submit" name="register">Register</button>
+        </form>
+        <div class="link">
+            <p>Already have an account? <a href="#" onclick="toggleForm('loginForm')">Login</a></p>
+        </div>
     </div>
 </body>
 </html>

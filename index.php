@@ -7,7 +7,19 @@ header("Pragma: no-cache");
 
 include 'config.php';
 
-$logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$logged_in = false;
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $_SESSION['email']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows == 1) {
+        $logged_in = true;
+    } else {
+        session_unset();
+        session_destroy();
+    }
+}
 
 // Handle login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
@@ -431,7 +443,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     <script>
         function confirmLogout() {
             if (confirm("Yakin ingin logout?")) {
-                window.location.href = "logout.php"; 
+                window.location.href = "logout.php";
             }
         }
     </script>

@@ -1,6 +1,9 @@
 <?php
-
+session_start();
 include 'config.php';
+
+// Periksa status login jika diperlukan
+$logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 
 // Ambil data dari tabel cars
 $sql = "SELECT name, price, torque, power, `range`, battery, acceleration, image FROM cars"; // Menambahkan kolom image
@@ -51,7 +54,12 @@ $result = $conn->query($sql);
                 </ul>
             </nav>
             <div class="icons">
-                <a href="login.php">👤</a>
+                <?php if ($logged_in): ?>
+                    <a href="profile.php">👤 Profile</a>
+                    <a href="pricing.php" onclick="confirmLogout()">🚪 Logout</a>
+                <?php else: ?>
+                    <a href="login.php">🔑 Login</a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
@@ -170,6 +178,13 @@ $result = $conn->query($sql);
     </style>
 </body>
 </html>
+    <script>
+        function confirmLogout() {
+            if (confirm("Yakin ingin logout?")) {
+                window.location.href = "logout.php"; 
+            }
+        }
+    </script>
 
 <?php
 // Tutup koneksi
