@@ -1,5 +1,8 @@
 <?php
-// config.php
+if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
+    header('HTTP/1.0 403 Forbidden');
+    exit('Direct access not allowed.');
+}
 
 $servername = "localhost";
 $username = "root";

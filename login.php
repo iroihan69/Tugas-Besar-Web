@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 include 'config.php';
 
@@ -7,13 +6,20 @@ $error = $success = "";
 
 // Handle Login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    // Ensure session is started only once
+if (session_status() === PHP_SESSION_NONE) {
+    // Ensure session starts only once
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
-    session_unset();
-    session_destroy();
-
-    session_start();
+}
+}
     if (isset($_POST['email']) && isset($_POST['password'])) {
         $email = trim($_POST['email']);
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $_SESSION['error'] = 'Email tidak valid.';
+    header('Location: login.php');
+    exit();
+}
         $password = trim($_POST['password']);
 
         if (!empty($email) && !empty($password)) {
@@ -61,6 +67,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm_password'])) {
         $email = trim($_POST['email']);
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $_SESSION['error'] = 'Email tidak valid.';
+    header('Location: login.php');
+    exit();
+}
         $password = trim($_POST['password']);
         $confirm_password = trim($_POST['confirm_password']);
 

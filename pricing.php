@@ -56,7 +56,7 @@ $result = $conn->query($sql);
             <div class="icons">
                 <?php if ($logged_in): ?>
                     <a href="profile.php">👤 Profile</a>
-                    <a href="pricing.php" onclick="confirmLogout()">🚪 Logout</a>
+                    <a href="logout.php" onclick="confirmLogout()">🚪 Logout</a>
                 <?php else: ?>
                     <a href="login.php">🔑 Login</a>
                 <?php endif; ?>

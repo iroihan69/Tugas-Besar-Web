@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 header("Cache-Control: no-cache, must-revalidate, max-age=0");
 header("Expires: 0");
 header("Pragma: no-cache");
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             <div class="icons">
                 <?php if ($logged_in): ?>
                     <a href="profile.php">👤 Profile</a>
-                    <a href="index.php" onclick="confirmLogout()">🚪 Logout</a>
+                    <a href="logout.php" onclick="confirmLogout()">🚪 Logout</a>
                 <?php else: ?>
                     <a href="login.php">🔑 Login</a>
                 <?php endif; ?>
